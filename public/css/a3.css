@@ -394,3 +394,37 @@ body{padding-top:0}
   .rv{opacity:1!important;transform:none!important;transition:none!important}
   .legacy .media img{filter:none!important}
 }
+
+/* ================================================================
+   MOBILE FIXES (appended; override earlier rules by source order)
+   Scope: mobile spacing, date scale, CTA contrast, nav overlap,
+   presentation-mode nav offset. No desktop or art-direction change.
+   ================================================================ */
+
+/* (4,6) CTA contrast — white button = deep-ink text; dark/outline = white text.
+   Fixes .nav-links a / #drawer a color bleeding onto buttons (white-on-white). */
+.nav-links a.btn-white,#drawer a.btn-white,#stick a.btn-white{color:var(--itx)}
+.nav-links a.btn-ink,.nav-links a.btn-outline,#drawer a.btn-ink,#drawer a.btn-outline{color:var(--white)}
+
+/* (6) keep the fixed nav clear of the fixed concept banner on mobile (banner ~43px) */
+@media(max-width:860px){header.nav{top:46px}}
+/* in presentation mode the banner is hidden, so the nav returns to the top */
+body.present header.nav{top:0}
+
+/* (1,2,3) 2026 feature on mobile: clear separation from hero, image above copy,
+   remove the negative margin that collided with the hero, scale the date down */
+@media(max-width:860px){
+  .f26{padding:clamp(40px,7vh,72px) 0 clamp(44px,7vh,64px);display:flex;flex-direction:column}
+  .f26 .fig{order:-1;height:54svh}
+  .f26 .copy{margin-top:28px;padding:0}
+  .f26 .date{font-size:clamp(2.6rem,12vw,4rem)}
+}
+
+/* (6) compact mobile nav — wordmark left, visible Tickets + hamburger right, no overlap */
+@media(max-width:600px){
+  .nav-in{padding:14px var(--gut)}
+  .wordmark{font-size:1rem;line-height:1.12;max-width:min(58vw,240px)}
+  .wordmark small{display:none}
+  .nav-links{gap:12px}
+  .nav-links a.btn-white{padding:9px 15px;min-height:auto;font-size:.82rem}
+}
