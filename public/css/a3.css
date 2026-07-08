@@ -20,6 +20,7 @@
   --serif:'Bodoni',Georgia,'Times New Roman',serif;
   --sans:'Hanken','Helvetica Neue',Arial,sans-serif;
   --gut:clamp(22px,5vw,88px); --sp:clamp(72px,10vw,148px);
+  --mobile-pad:24px;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -396,35 +397,55 @@ body{padding-top:0}
 }
 
 /* ================================================================
-   MOBILE FIXES (appended; override earlier rules by source order)
-   Scope: mobile spacing, date scale, CTA contrast, nav overlap,
-   presentation-mode nav offset. No desktop or art-direction change.
+   GLOBAL MOBILE SYSTEM (appended; overrides earlier rules by order)
+   One container: all text + content cards align to --mobile-pad on
+   both edges. Hero/feature images are full-bleed by intent, never
+   overflowing. No desktop or art-direction change.
    ================================================================ */
 
-/* (4,6) CTA contrast — white button = deep-ink text; dark/outline = white text.
-   Fixes .nav-links a / #drawer a color bleeding onto buttons (white-on-white). */
+/* CTA contrast — white button = deep-ink text; dark/outline = white text
+   (fixes .nav-links a / #drawer a color bleeding onto buttons) */
 .nav-links a.btn-white,#drawer a.btn-white,#stick a.btn-white{color:var(--itx)}
 .nav-links a.btn-ink,.nav-links a.btn-outline,#drawer a.btn-ink,#drawer a.btn-outline{color:var(--white)}
 
-/* (6) keep the fixed nav clear of the fixed concept banner on mobile (banner ~43px) */
+/* keep the fixed nav clear of the fixed concept banner on mobile (banner ~43px) */
 @media(max-width:860px){header.nav{top:46px}}
-/* in presentation mode the banner is hidden, so the nav returns to the top */
+/* presentation mode hides the banner, so the nav returns to the very top */
 body.present header.nav{top:0}
 
-/* (1,2,3) 2026 feature on mobile: clear separation from hero, image above copy,
-   remove the negative margin that collided with the hero, scale the date down */
-@media(max-width:860px){
-  .f26{padding:clamp(40px,7vh,72px) 0 clamp(44px,7vh,64px);display:flex;flex-direction:column}
-  .f26 .fig{order:-1;height:54svh}
-  .f26 .copy{margin-top:28px;padding:0}
-  .f26 .date{font-size:clamp(2.6rem,12vw,4rem)}
-}
+/* anchor targets / headings clear the fixed mobile nav when jumped to */
+@media(max-width:860px){:where(section,[id],h1,h2,h3){scroll-margin-top:104px}}
 
-/* (6) compact mobile nav — wordmark left, visible Tickets + hamburger right, no overlap */
+/* ---- ONE container width for phones: unify every horizontal inset ---- */
 @media(max-width:600px){
+  :root{--gut:var(--mobile-pad)}          /* wrap + all components inherit this */
+  .wrap{max-width:100%}
   .nav-in{padding:14px var(--gut)}
-  .wordmark{font-size:1rem;line-height:1.12;max-width:min(58vw,240px)}
+  .wordmark{font-size:1rem;line-height:1.12;max-width:min(60vw,240px)}
   .wordmark small{display:none}
   .nav-links{gap:12px}
   .nav-links a.btn-white{padding:9px 15px;min-height:auto;font-size:.82rem}
+  .routes .cap{padding:16px}
+  .feat .tx{padding:clamp(30px,7vw,44px) var(--gut)}
+}
+
+/* ---- 2026 feature: image band + copy on one grid; image inset to the
+        same edges as the text; no negative margin, no overflow ---- */
+@media(max-width:860px){
+  .f26{display:grid;grid-template-columns:minmax(0,1fr);row-gap:26px;
+       padding:clamp(40px,7vh,64px) 0 clamp(44px,7vh,64px)}
+  .f26 > .wrap{grid-row:2;margin:0;max-width:none}
+  .f26 .grid{display:block}
+  .f26 .copy{margin:0;padding:0}
+  .f26 .fig{grid-row:1;position:relative;left:0;right:auto;margin:0 var(--gut);
+       width:auto;max-width:none;height:auto;aspect-ratio:4/5}
+  .f26 .fig img{width:100%;height:100%;object-position:center 18%;
+       -webkit-mask-image:none;mask-image:none}
+  .f26 .date{font-size:clamp(2.6rem,12vw,4rem)}
+}
+
+/* ---- images never exceed the viewport; intentional framing ---- */
+@media(max-width:860px){
+  img,video{max-width:100%}
+  .lead-fig img{object-position:center 30%}
 }
